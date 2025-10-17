@@ -12,18 +12,31 @@ public class CalculatorService {
 		}
 		Delimiter delimiter = Delimiter.fromText(text);
 		String[] token = delimiter.getNumberText().split(delimiter.getDelimiter());
+		System.out.println("Delimiter: " + delimiter.getDelimiter());
+		System.out.println("NumberText: " + delimiter.getNumberText());
+		System.out.println("Tokens: " + Arrays.toString(token));
 
 		if (token.length == 0 || token.length == 1 && token[0].isEmpty()) {
 			return 0;
 		}
 		return Arrays.stream(token)
-			.mapToInt(this::parseToInt)
+			.mapToInt(this::parseAndValidate)
 			.sum();
 
 	}
 
-	private int parseToInt(String numberText) { // 숫자 변환
-		return Integer.parseInt(numberText);
+	private int parseAndValidate(String numberText) { // 유효성 검증 수행 및 숫자변환
+		int number;
+		try {  // 숫자로 변환
+			number = Integer.parseInt(numberText);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("숫자가 아닌 값이 포함되어 있습니다.");
+		}
+
+		if (number<0) {  // 음수일 경우
+			throw new IllegalArgumentException("음수가 포함되어 있습니다.");
+		}
+		return number;
 	}
 
 }

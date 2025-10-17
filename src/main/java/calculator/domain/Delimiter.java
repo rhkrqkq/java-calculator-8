@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Delimiter {
 
 	private static final String DEFAULT_DELIMITER = ",|:";
-	private static final Pattern CUSTOM_DELIMITER = Pattern.compile("//(.)\\\\?n(.*)");
+	private static final Pattern CUSTOM_DELIMITER = Pattern.compile("//(.)(?:\\\\n|\n)(.*)");
 
 	private final String delimiter;  // 문자열 분리 시 사용될 구분자
 	private final String numberText;  // 숫자, 구분자로만 구성된 식
@@ -22,6 +22,7 @@ public class Delimiter {
 		if (matcher.find()) {
 			String customDelimiter = matcher.group(1);
 			String numbers = matcher.group(2);
+			return new Delimiter(customDelimiter, numbers);
 		}
 		return new Delimiter(DEFAULT_DELIMITER, text);
 	}
